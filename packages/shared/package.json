@@ -1,0 +1,65 @@
+{
+    "name": "@kimfrost/shared",
+    "version": "0.1.0",
+    "author": {
+        "name": "Kim Frost",
+        "email": "kim@thatworks.dk",
+        "url": "http://thatworks.dk"
+    },
+    "keywords": [
+        "library"
+    ],
+    "license": "ISC",
+    "private": false,
+    "description": "",
+    "main": "dist/index.js",
+    "module": "dist/index.es.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build-ts": "tsc",
+        "build": "rollup -c",
+        "build:watch": "rollup -cw"
+    },
+    "dependencies": {
+        "polished": "^3.4.2",
+        "styled-components": "^5.2.0",
+        "react-transition-group": "^4.4.1",
+        "recoil": "^0.1.2",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
+        "react-dnd": "^11.1.3",
+        "react-dnd-html5-backend": "^11.1.3",
+        "react-dnd-multi-backend": "^6.0.2",
+        "react-dnd-touch-backend": "^11.1.3",
+        "signalr-no-jquery": "^0.1.10",
+        "@material-ui/core": "^4.11.0",
+        "@material-ui/icons": "^4.9.1"
+    },
+    "devDependencies": {
+        "@types/signalr-no-jquery": "^0.1.2",
+        "@types/react-dnd-multi-backend": "^6.0.0",
+        "@types/react-transition-group": "^4.4.0",
+        "@types/styled-components": "^5.1.4",
+        "@types/css-modules": "^1.0.0",
+        "@types/node": "^12.12.17",
+        "@types/react": "^17.0.0",
+        "@types/react-dom": "^17.0.0",
+        "node-sass": "^4.13.0",
+        "rollup": "^1.27.13",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-postcss": "^2.0.3",
+        "rollup-plugin-postcss-modules": "^2.0.1",
+        "rollup-plugin-terser": "^5.1.3",
+        "rollup-plugin-typescript2": "^0.25.3",
+        "typescript": "^4.1.2"
+    },
+    "peerDependencies": {
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1"
+    }
+}
