@@ -1,4 +1,4 @@
-import { IAlarm, ILocation, IZone, EAlarmType } from "./types"
+import { IAlarm, ILocation, IZone } from '@kimfrost/shared';
 
 const zones = require("./public/zones.json");
 

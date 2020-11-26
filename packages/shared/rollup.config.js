@@ -1,7 +1,7 @@
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
 import { terser } from "rollup-plugin-terser";
-import postcss from 'rollup-plugin-postcss-modules';
+import postcss from 'rollup-plugin-postcss';
 
 export default {
     input: 'src/index.ts', // our source file
@@ -27,9 +27,6 @@ export default {
         postcss({
             extract: false,
             writeDefinitions: true,
-            modules: {
-                generateScopedName: "[local]___[hash:base64:4]__" + pkg.version
-            },
             use: ['sass']
         }),
         typescript({
