@@ -124,7 +124,7 @@ class Server {
 
         // Simulate latency
         this._app.use((req, res, next) => {
-            const delay = Math.floor(Math.random() * (2000 - 300 + 1)) + 300;
+            const delay = Math.floor(Math.random() * (2000 - 600 + 1)) + 600;
             setTimeout(next, delay)
         })
 

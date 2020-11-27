@@ -5,6 +5,7 @@ import AlarmList from './Components/AlarmList';
 import useEffectChange from './hooks/useEffectChange';
 import DragLayer from './Components/DragLayer/DragLayer';
 import DraggableNode from './Components/Node/DraggableNode';
+import useAlarmData from './Hooks/useAlarmData';
 
 //export * as Types from './Types/types';
 //export { EAlarmType, EAlarmTypePriority, IZone, IMessage, ILocation, IAlarm } from './Types/types';
@@ -17,5 +18,6 @@ export {
     AlarmList,
     DragLayer,
     DraggableNode,
-    useEffectChange
+    useEffectChange,
+    useAlarmData
 }
