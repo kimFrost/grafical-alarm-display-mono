@@ -152,7 +152,7 @@ const App = () => {
                         ))}
                     </Select>
                 </div>
-                {/* <Livemap alarms={alarms || []} /> */}
+                <Livemap alarms={alarms || []} />
             </div>
 
         </div>

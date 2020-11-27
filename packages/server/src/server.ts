@@ -117,7 +117,7 @@ class Server {
 
         this._app = express();
         this.port = process.env.PORT || Server.PORT;
-        this._app.use(express.static('public'));
+        this._app.use(express.static(path.join(__dirname, 'public')));
         this._app.use('/uploads', express.static('uploads'));
         this._app.use(cors());
         this._app.options('*', cors());

@@ -60,3 +60,8 @@ export interface IRequest {
     Id: string
     status: ERequestStatus
 }
+
+export interface IConfiguration {
+    icons: Map<string, string>
+    sounds: Map<string, string>
+}
