@@ -7,6 +7,7 @@ import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import { RecoilRoot } from 'recoil';
 import App from './App';
 import './index.scss';
+import { LoginFlow } from '@kimfrost/shared';
 
 
 const HTML5toTouch = {
@@ -26,7 +27,9 @@ const HTML5toTouch = {
 ReactDOM.render(
     <DndProvider backend={MultiBackend as any} options={HTML5toTouch}>
         <RecoilRoot>
-            <App />
+            <LoginFlow>
+                <App />
+            </LoginFlow>
         </RecoilRoot>
     </DndProvider>,
     document.getElementById('root')

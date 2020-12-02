@@ -11,9 +11,18 @@ import data from './data';
 
 const fs = require('fs');
 var cors = require('cors');
+//var CodeGen = require("swagger-typescript-codegen").CodeGen;
 
 const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+// var swaggerFile = __dirname + "/swagger.json";
+// var swagger = JSON.parse(fs.readFileSync(swaggerFile, "UTF-8"));
+// var tsSourceCode = CodeGen.getTypescriptCode({
+//     className: "Test",
+//     swagger: swagger,
+// });
+// fs.writeFileSync(__dirname + '/typings.ts', tsSourceCode);
 
 const getRandomEnumKey = (enumeration: any): any => {
     const values = Object.keys(enumeration);

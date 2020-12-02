@@ -18,8 +18,6 @@ const useAlarmData = () => {
     const [socket, setSocket] = useState<WebSocket | null>(null);
     const prevAlarms = usePrevious(alarms);
 
-    console.log('new app instance', socket)
-
     useEffect(() => {
         if (selectedAlarm) {
             const alarmLocation = locations.find(location => location.Id === selectedAlarm.Location)

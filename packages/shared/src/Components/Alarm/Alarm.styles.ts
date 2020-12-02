@@ -1,4 +1,5 @@
 import { Button } from '@material-ui/core';
+import { rgba } from 'polished';
 import { ENTERING, ENTERED, EXITING, EXITED, TransitionStatus } from 'react-transition-group/Transition';
 import styled, { keyframes, css } from 'styled-components';
 import { EAlarmType, ERequestStatus, IRequest } from '../../Types/types';
@@ -116,13 +117,24 @@ export const Container = styled.div<IProps>`
         position: absolute;
     }
     
-    animation: ${props => !props.acknowledged ? css`
-        ${moveIn} 500ms ease, ${pulse} 1s 1500ms infinite
-    ` : css`
-        ${moveInAcknowledged} 500ms ease;
-    `};
+    ${props => {
+        if (props.state === ENTERING) {
+            return css`
+                animation: ${moveIn} 500ms ease;
+            `;
+        }
+        else {
+            if (!props.acknowledged) {
+                return css`
+                    animation: ${pulse} 1s 1500ms infinite;
+                `;
+            }
+        }
+    }}
+
     ${props => props.acknowledged ? css`
-        opacity: 0.4;
+        border-color:  ${rgba(getColorByType(props.type), 0.4)};
+        color: ${rgba(getColorByType(props.type), 0.4)};
     ` : null}
     ${props => props.selected ? css`
         border-width: 6px;

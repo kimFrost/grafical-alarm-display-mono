@@ -8,13 +8,16 @@ import {
     Livemap,
     AlarmList,
     useAlarmData,
+    useAlarmDataSignalr,
     selectedLocationState
 } from '@kimfrost/shared';
 
 import './App.scss';
 
 const App = () => {
-    const { alarms, locations } = useAlarmData()
+    //const { alarms, locations } = useAlarmData()
+    const { alarms, locations } = useAlarmDataSignalr()
+
     const [selectedLocation, setSelectedLocation] = useRecoilState(selectedLocationState);
 
     return (

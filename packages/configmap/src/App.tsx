@@ -1,14 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
+import Axios from 'axios';
 
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { Select } from '@material-ui/core';
-import Axios from 'axios';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import {
     IZone,
     DragLayer,
-    DraggableNode
+    DraggableNode,
+    APIKit
 } from '@kimfrost/shared';
 
 import './App.scss';
@@ -52,8 +54,20 @@ const NavItem: React.FC<INavItemProps> = ({ id, type, active, children }) => {
 const App = () => {
 
     const imageRef = useRef<HTMLImageElement>(null);
-
     const [points, setPoints] = useState<IZone[]>([]);
+
+    const [locations, setLocations] = useState([])
+    const [selectedLocation, setSelectedLocation] = useState(null);
+
+
+    useEffect(() => {
+        APIKit.get('/crossorigin/GetAllowedUnits')
+            .then(response => {
+                console.log(response)
+                setLocations(response.data)
+            })
+            .catch(error => console.log(error))
+    }, [])
 
     useEffect(() => {
         const options = {
@@ -171,26 +185,61 @@ const App = () => {
                     ))}
                 </div>
                 <div className="app__controls">
+                    <Select value={selectedLocation ? (selectedLocation as any).id : null} variant="outlined" onChange={(e) => {
+                        const location = locations.find(location => (location as any).id === e.target.value);
+                        if (location) {
+                            setSelectedLocation(location)
+                        }
+                    }}>
+                        {locations.map(location => (
+                            <MenuItem key={(location as any).id} value={(location as any).id}>{(location as any).id}</MenuItem>
+                        ))}
+                    </Select>
+
                     <input type="file" accept="image/*" onChange={(e) => {
                         e.persist();
                         if (e.target && e.target.files) {
                             Array.from(e.target.files).forEach(file => {
 
-                                const formData = new FormData();
-                                formData.append('image', file);
-                                Axios.post('http://localhost:5002/upload', formData, {
-                                    onUploadProgress: e => {
-                                        let progress = Math.round(
-                                            e.loaded / e.total * 100) + '%';
-                                        console.log('progress', progress)
-                                    }
-                                }).then(res => {
-                                    console.log(res);
-                                    // getFile({
-                                    //     name: res.data.name,
-                                    //     path: 'http://localhost:4500' + res.data.path
-                                    // })
-                                }).catch(err => console.log(err))
+                                const reader = new FileReader();
+                                var url = reader.readAsDataURL(file);
+                                reader.onload = function () {
+                                    console.log(reader.result, url)
+                                    APIKit.post('/crossorigin/SaveGraphicalDisplayImage', {
+                                        id: (selectedLocation as any).id,
+                                        unitId: (selectedLocation as any).id,
+                                        imageBase64: reader.result
+                                    }, {
+                                        onUploadProgress: e => {
+                                            let progress = Math.round(
+                                                e.loaded / e.total * 100) + '%';
+                                            console.log('progress', progress)
+                                        }
+                                    })
+                                        .then(response => console.log(response))
+                                        .catch(error => console.log(error))
+                                };
+                                reader.onerror = function (error) {
+                                    console.log('Error: ', error);
+                                };
+
+
+
+                                //const formData = new FormData();
+                                //formData.append('image', file);
+                                // Axios.post('http://localhost:5002/upload', formData, {
+                                //     onUploadProgress: e => {
+                                //         let progress = Math.round(
+                                //             e.loaded / e.total * 100) + '%';
+                                //         console.log('progress', progress)
+                                //     }
+                                // }).then(res => {
+                                //     console.log(res);
+                                //     // getFile({
+                                //     //     name: res.data.name,
+                                //     //     path: 'http://localhost:4500' + res.data.path
+                                //     // })
+                                // }).catch(err => console.log(err))
 
                                 // getFileFromInput(file)
                                 //     .then((binary) => manageUploadedFile(binary, file))

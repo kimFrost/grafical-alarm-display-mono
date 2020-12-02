@@ -199,7 +199,6 @@ const AlarmListItem: React.FC<IProps> = ({ alarm, state }) => {
         setSelectedAlarm(newExpanded ? alarm : null);
     };
 
-
     return (
         <AccordionStyled
             className={classes.accordion}

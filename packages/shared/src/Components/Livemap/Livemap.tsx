@@ -8,7 +8,6 @@ import Alarm from './../Alarm/Alarm';
 import { selectedAlarmState, selectedLocationState } from './../../State/atoms';
 import { IAlarm } from '../../Types/types';
 import SuspenseImage from './../SuspenseImage';
-import { TransitionGroup } from 'react-transition-group';
 
 interface IProps {
     alarms: IAlarm[]
@@ -31,7 +30,10 @@ const Livemap: React.FC<IProps> = ({ alarms }) => {
                         {!loading &&
                             alarms.map((alarm, index) => (
                                 alarm.Location === selectedLocation?.Id ?
-                                    <Node key={alarm.Id} id={alarm.Id} left={alarm.Position[0]} top={alarm.Position[1]}>
+                                    // <Node key={alarm.Id} id={alarm.Id} left={alarm.Position[0]} top={alarm.Position[1]}>
+                                    //     <Alarm alarm={alarm} />
+                                    // </Node>
+                                    <Node key={alarm.Id} id={alarm.Id} left={0} top={0}>
                                         <Alarm alarm={alarm} />
                                     </Node>
                                     : null
