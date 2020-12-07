@@ -29,7 +29,7 @@ const Livemap: React.FC<IProps> = ({ alarms }) => {
                     <div className="app__points">
                         {!loading &&
                             alarms.map((alarm, index) => (
-                                alarm.Location === selectedLocation?.Id ?
+                                alarm.Location === selectedLocation?.id ?
                                     // <Node key={alarm.Id} id={alarm.Id} left={alarm.Position[0]} top={alarm.Position[1]}>
                                     //     <Alarm alarm={alarm} />
                                     // </Node>

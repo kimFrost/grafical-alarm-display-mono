@@ -9,12 +9,14 @@ import {
     AlarmList,
     useAlarmData,
     useAlarmDataSignalr,
-    selectedLocationState
+    selectedLocationState,
 } from '@kimfrost/shared';
 
 import './App.scss';
 
-const App = () => {
+
+
+const App: React.FC = () => {
     //const { alarms, locations } = useAlarmData()
     const { alarms, locations } = useAlarmDataSignalr()
 
@@ -27,14 +29,14 @@ const App = () => {
                     <AlarmList alarms={alarms || []} />
                 </div>
                 <div className="app__controls">
-                    <Select value={selectedLocation ? selectedLocation.Id : null} variant="outlined" onChange={(e) => {
-                        const location = locations.find(location => location.Id === e.target.value);
+                    <Select value={selectedLocation ? selectedLocation.id : null} variant="outlined" onChange={(e) => {
+                        const location = locations.find(location => location.id === e.target.value);
                         if (location) {
                             setSelectedLocation(location)
                         }
                     }}>
                         {locations.map(location => (
-                            <MenuItem key={location.Id} value={location.Id}>{location.Id}</MenuItem>
+                            <MenuItem key={location.id} value={location.id}>{location.id}</MenuItem>
                         ))}
                     </Select>
                 </div>

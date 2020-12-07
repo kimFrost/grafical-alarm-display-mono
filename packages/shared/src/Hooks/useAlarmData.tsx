@@ -20,7 +20,7 @@ const useAlarmData = () => {
 
     useEffect(() => {
         if (selectedAlarm) {
-            const alarmLocation = locations.find(location => location.Id === selectedAlarm.Location)
+            const alarmLocation = locations.find(location => location.id === selectedAlarm.Location)
             if (alarmLocation) {
                 setSelectedLocation(alarmLocation)
             }
@@ -35,7 +35,7 @@ const useAlarmData = () => {
 
             let location;
             if (mostUrgentAlarm) {
-                location = (locations as ILocation[]).find(location => location.Id === mostUrgentAlarm.Location);
+                location = (locations as ILocation[]).find(location => location.id === mostUrgentAlarm.Location);
             }
             location = location ? location : locations[0];
             if (location) {
@@ -62,7 +62,7 @@ const useAlarmData = () => {
                             return (current.Priority > prev.Priority) ? current : prev
                         });
                         if (mostUrgentAlarm) {
-                            const location = locations.find(location => location.Id === mostUrgentAlarm.Location);
+                            const location = locations.find(location => location.id === mostUrgentAlarm.Location);
                             if (location) {
                                 setSelectedLocation(location);
                             }

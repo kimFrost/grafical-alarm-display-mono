@@ -5,8 +5,7 @@ import axios from "axios";
 
 import { Container } from './styles';
 import { useEffect } from 'react';
-import APIKit, { setClientToken, clearClientToken } from './../../Util/APIKit';
-
+import useAPI from '../API/useAPI';
 
 interface ILoginForm extends FormData {
     username: string
@@ -19,10 +18,14 @@ const LoginFlow: React.FC = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const { handleSubmit, register } = useForm<ILoginForm>();
 
+    const api = useAPI();
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            setClientToken(token)
+            if (api) {
+                api.setClientToken(token)
+            }
             checkLoggedIn()
         }
         else {
@@ -38,34 +41,42 @@ const LoginFlow: React.FC = ({ children }) => {
     }, [])
 
     const checkLoggedIn = () => {
-        return APIKit.get('/account/IsAuthenticated')
-            .then(response => {
-                setIsLoggedIn(true)
-                setIsPending(false)
-            })
-            .catch(error => {
-                setIsPending(false)
-                if (error.response.status === 401) {
-                    clearClientToken()
-                    setIsLoggedIn(false)
-                }
-            })
+        if (api) {
+            return api.get('/account/IsAuthenticated')
+                .then(response => {
+                    setIsLoggedIn(true)
+                    setIsPending(false)
+                })
+                .catch(error => {
+                    setIsPending(false)
+                    console.error(error)
+                    if (error.response) {
+                        if (error.response.status === 401) {
+                            api.clearClientToken()
+                            setIsLoggedIn(false)
+                        }
+                    }
+                })
+        }
+
     }
 
     const onSubmit = handleSubmit((data) => {
-        APIKit.post(`/account/Login?username=${data.username}&password=${data.password}`, {
-            username: data.username,
-            password: data.password
-        }).then(
-            response => {
-                const token = response.data;
-                setClientToken(token);
-                setIsLoggedIn(true)
-            }
+        if (api) {
+            api.post('/account/Login', {
+                username: data.username,
+                password: data.password
+            }).then(
+                response => {
+                    const token = response.data;
+                    api.setClientToken(token);
+                    setIsLoggedIn(true)
+                }
 
-        ).catch(
-            error => console.log('error', error)
-        )
+            ).catch(
+                error => console.log('error', error)
+            )
+        }
     });
 
     return (

@@ -9,6 +9,8 @@ import useAlarmData from './Hooks/useAlarmData';
 import LoginFlow from './Components/LoginFlow/index';
 import useAlarmDataSignalr from './Hooks/useAlarmData.signalr';
 import APIKit from './Util/APIKit';
+import APIProvider from './Components/API/APIProvider';
+import useAPI from './Components/API/useAPI';
 
 //export * as Types from './Types/types';
 //export { EAlarmType, EAlarmTypePriority, IZone, IMessage, ILocation, IAlarm } from './Types/types';
@@ -25,5 +27,7 @@ export {
     useEffectChange,
     useAlarmData,
     useAlarmDataSignalr,
-    APIKit
+    APIKit,
+    APIProvider,
+    useAPI
 }

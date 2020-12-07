@@ -5,7 +5,7 @@ export interface IMessage {
 }
 
 export interface ILocation {
-    Id: string
+    id: string
     ImageUrl: string
 }
 

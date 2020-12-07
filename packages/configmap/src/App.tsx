@@ -15,6 +15,13 @@ import {
 
 import './App.scss';
 
+const api = new APIKit({
+    baseURL: 'http://localhost:8083/api',
+    timeout: 5000,
+    headers: { 
+        ctAuthKey: "C551E850-5BD5-4159-8505-85A11C75E4DB"
+    }
+})
 
 interface INavItemProps {
     id: string,
@@ -59,9 +66,8 @@ const App = () => {
     const [locations, setLocations] = useState([])
     const [selectedLocation, setSelectedLocation] = useState(null);
 
-
     useEffect(() => {
-        APIKit.get('/crossorigin/GetAllowedUnits')
+        api.get('/crossorigin/GetAllowedUnits')
             .then(response => {
                 console.log(response)
                 setLocations(response.data)
@@ -205,7 +211,7 @@ const App = () => {
                                 var url = reader.readAsDataURL(file);
                                 reader.onload = function () {
                                     console.log(reader.result, url)
-                                    APIKit.post('/crossorigin/SaveGraphicalDisplayImage', {
+                                    api.post('/crossorigin/SaveGraphicalDisplayImage', {
                                         id: (selectedLocation as any).id,
                                         unitId: (selectedLocation as any).id,
                                         imageBase64: reader.result
