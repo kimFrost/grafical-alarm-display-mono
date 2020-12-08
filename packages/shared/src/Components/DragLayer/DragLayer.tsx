@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDragLayer, XYCoord } from 'react-dnd';
+import Point from '../Point';
 
 import { Container } from './styles';
 
@@ -16,7 +17,7 @@ const dragLayerStyles: React.CSSProperties = {
 function getItemStyles(
     initialOffset: XYCoord | null,
     currentOffset: XYCoord | null
-) {
+): React.CSSProperties {
     if (!initialOffset || !currentOffset) {
         return {
             //display: 'none',
@@ -28,6 +29,7 @@ function getItemStyles(
 
     const transform = `translate(${x}px, ${y}px)`
     return {
+        position: 'absolute',
         transform,
         WebkitTransform: transform,
         opacity: 1
@@ -55,10 +57,13 @@ const DragLayer: React.FC<IDragLayerProps> = () => {
 
     return (
         <div style={dragLayerStyles}>
-            <div
+            <div style={getItemStyles(initialOffset, clientOffset)}>
+                <Point></Point>
+            </div>
+            {/* <div
                 className={['point', 'point--preview', isDragging ? 'point--dragging' : null].join(' ')}
                 style={getItemStyles(initialOffset, clientOffset)}>
-            </div>
+            </div> */}
         </div>
     )
 }

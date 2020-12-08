@@ -252,7 +252,7 @@ class Server {
             Id: `Alarm_${Math.floor(Math.random() * 100000)}`,
             ZoneId: '',
             ZoneText: '',
-            Location: randomLocations.Id,
+            Location: randomLocations.id,
             UnitText: 'Afdeling 1',
             EquipmentPhysicalId: '',
             Type: alarmTypeValue,

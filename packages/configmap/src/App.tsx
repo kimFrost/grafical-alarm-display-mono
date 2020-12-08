@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-import Axios from 'axios';
 
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { Select } from '@material-ui/core';
@@ -10,18 +9,15 @@ import {
     IZone,
     DragLayer,
     DraggableNode,
-    APIKit
+    useAPI,
+    ILocation,
+    Point
 } from '@kimfrost/shared';
 
 import './App.scss';
+import * as tempData from './tempdata'
 
-const api = new APIKit({
-    baseURL: 'http://localhost:8083/api',
-    timeout: 5000,
-    headers: { 
-        ctAuthKey: "C551E850-5BD5-4159-8505-85A11C75E4DB"
-    }
-})
+
 
 interface INavItemProps {
     id: string,
@@ -63,30 +59,50 @@ const App = () => {
     const imageRef = useRef<HTMLImageElement>(null);
     const [points, setPoints] = useState<IZone[]>([]);
 
-    const [locations, setLocations] = useState([])
-    const [selectedLocation, setSelectedLocation] = useState(null);
+    const [locations, setLocations] = useState<ILocation[]>([]);
+    const [selectedLocation, setSelectedLocation] = useState<ILocation | null>(null);
+
+    const api = useAPI();
 
     useEffect(() => {
-        api.get('/crossorigin/GetAllowedUnits')
-            .then(response => {
-                console.log(response)
-                setLocations(response.data)
-            })
-            .catch(error => console.log(error))
-    }, [])
-
-    useEffect(() => {
-        const options = {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
+        if (api) {
+            api.get('/crossorigin/GetAllowedUnits')
+                .then(response => {
+                    console.log(response)
+                    setLocations(response.data)
+                })
+                .catch(error => console.log(error))
         }
-        fetch('http://localhost:5002/zones', options).then(async (response) => {
-            const data = await response.json();
-            setPoints(data)
-        }).catch((error) => {
-            console.error(error)
-        })
     }, [])
+
+    useEffect(() => {
+        if (api && selectedLocation) {
+            api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${selectedLocation.id}`)
+                .then(response => {
+                    console.log('image', response)
+                })
+                .catch(error => console.log(error))
+            api.get(`/crossorigin/GetConfiguration?unitId=${selectedLocation.id}`)
+                .then(response => {
+                    console.log('configuration', response)
+                    setPoints(tempData.default as any)
+                })
+                .catch(error => console.log(error))
+        }
+    }, [selectedLocation])
+
+    // useEffect(() => {
+    //     const options = {
+    //         method: 'GET',
+    //         headers: { 'Content-Type': 'application/json' },
+    //     }
+    //     fetch('http://localhost:5002/zones', options).then(async (response) => {
+    //         const data = await response.json();
+    //         setPoints(data)
+    //     }).catch((error) => {
+    //         console.error(error)
+    //     })
+    // }, [])
 
     const [{ }, dropTarget] = useDrop({
         accept: ['NAVITEM', 'POINT'],
@@ -186,6 +202,7 @@ const App = () => {
                             active={point.IsActive}
                             type="NAVITEM"
                         >
+                            <Point></Point>
                             {point.Id}
                         </NavItem>
                     ))}
@@ -211,19 +228,21 @@ const App = () => {
                                 var url = reader.readAsDataURL(file);
                                 reader.onload = function () {
                                     console.log(reader.result, url)
-                                    api.post('/crossorigin/SaveGraphicalDisplayImage', {
-                                        id: (selectedLocation as any).id,
-                                        unitId: (selectedLocation as any).id,
-                                        imageBase64: reader.result
-                                    }, {
-                                        onUploadProgress: e => {
-                                            let progress = Math.round(
-                                                e.loaded / e.total * 100) + '%';
-                                            console.log('progress', progress)
-                                        }
-                                    })
-                                        .then(response => console.log(response))
-                                        .catch(error => console.log(error))
+                                    if (api) {
+                                        api.post('/crossorigin/SaveGraphicalDisplayImage', {
+                                            id: (selectedLocation as any).id,
+                                            unitId: (selectedLocation as any).id,
+                                            imageBase64: reader.result
+                                        }, {
+                                            onUploadProgress: e => {
+                                                let progress = Math.round(
+                                                    e.loaded / e.total * 100) + '%';
+                                                console.log('progress', progress)
+                                            }
+                                        })
+                                            .then(response => console.log(response))
+                                            .catch(error => console.log(error))
+                                    }
                                 };
                                 reader.onerror = function (error) {
                                     console.log('Error: ', error);
@@ -288,7 +307,7 @@ const App = () => {
                             {points.map((point, index) => (
                                 point.IsActive ?
                                     <DraggableNode key={index} id={point.Id} left={point.Position[0]} top={point.Position[1]}>
-                                        <div className="point">{point.Id}</div>
+                                        <Point>{point.Id}</Point>
                                     </DraggableNode>
                                     : null
                             ))}

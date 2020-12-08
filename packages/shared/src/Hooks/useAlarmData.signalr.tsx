@@ -3,13 +3,6 @@ import { Connection, hubConnection } from 'signalr-no-jquery';
 import useAPI from '../Components/API/useAPI';
 import { IAlarm, ILocation } from '../Types/types';
 
-// const api = new APIKit({
-//     baseURL: 'https://localhost:8083/api',
-//     timeout: 5000,
-//     headers: {
-//         ctAuthKey: "C551E850-5BD5-4159-8505-85A11C75E4DB"
-//     }
-// })
 
 const useAlarmDataSignalr = () => {
 
@@ -21,16 +14,28 @@ const useAlarmDataSignalr = () => {
     const fetchLocations = () => {
         if (api) {
             api.get('/crossorigin/GetAllowedUnits')
-            .then(response => {
-                console.log(response)
-                setLocations(response.data)
-            })
-            .catch(error => console.log(error))
+                .then(response => {
+                    console.log(response)
+                    setLocations(response.data)
+                })
+                .catch(error => console.log(error))
+        }
+    }
+
+    const fetchAlarms = () => {
+        if (api) {
+            api.get('/crossorigin/GetAlarmsForGraphicalDisplay')
+                .then(response => {
+                    console.log(response)
+                    //setLocations(response.data)
+                })
+                .catch(error => console.log(error))
         }
     }
 
     useEffect(() => {
         fetchLocations();
+        fetchAlarms();
     }, [])
 
     useEffect(() => {

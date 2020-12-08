@@ -4,7 +4,7 @@ import Livemap from './Components/Livemap';
 import AlarmList from './Components/AlarmList';
 import useEffectChange from './hooks/useEffectChange';
 import DragLayer from './Components/DragLayer/DragLayer';
-import DraggableNode from './Components/Node/DraggableNode';
+import DraggableNode from './Components/DraggableNode';
 import useAlarmData from './Hooks/useAlarmData';
 import LoginFlow from './Components/LoginFlow/index';
 import useAlarmDataSignalr from './Hooks/useAlarmData.signalr';

@@ -1,38 +1,13 @@
 
-import React, { useEffect } from 'react';
-import { useDrag } from 'react-dnd';
-import { getEmptyImage } from 'react-dnd-html5-backend';
+import React from 'react';
 
-import { Container } from './styles';
+import { PointRoot } from './Point.styles';
 
-export interface IPointProps {
-    id: string
-    left: number
-    top: number
-}
-
-const Point: React.FC<IPointProps> = (props) => {
-    const { id, left, top } = props;
-    const [{ isDragging }, ref, preview] = useDrag({
-        item: {
-            type: 'POINT',
-            id,
-            left,
-            top,
-        },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging()
-        }),
-    })
-
-    useEffect(() => {
-        preview(getEmptyImage(), { captureDraggingState: true })
-    }, [])
-
+const Point: React.FC = ({children}) => {
     return (
-        <Container ref={ref} {...props} isDragging={isDragging} className="point">
-            {id}
-        </Container>
+        <PointRoot>
+            {children}
+        </PointRoot>
     )
 }
 export default Point;
