@@ -4,6 +4,7 @@ import { useDrag, useDrop } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { Select } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
+import SettingsRemoteIcon from '@material-ui/icons/SettingsRemote';
 
 import {
     IZone,
@@ -61,6 +62,7 @@ const App = () => {
 
     const [locations, setLocations] = useState<ILocation[]>([]);
     const [selectedLocation, setSelectedLocation] = useState<ILocation | null>(null);
+    const [imageSrc, setImageSrc] = useState<string>('');
 
     const api = useAPI();
 
@@ -70,6 +72,7 @@ const App = () => {
                 .then(response => {
                     console.log(response)
                     setLocations(response.data)
+                    setSelectedLocation(response.data[0])
                 })
                 .catch(error => console.log(error))
         }
@@ -80,11 +83,13 @@ const App = () => {
             api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${selectedLocation.id}`)
                 .then(response => {
                     console.log('image', response)
+                    setImageSrc(response.data.imageBase64)
                 })
                 .catch(error => console.log(error))
             api.get(`/crossorigin/GetConfiguration?unitId=${selectedLocation.id}`)
                 .then(response => {
                     console.log('configuration', response)
+                    // Set test data from temp file. Until server response is fixed
                     setPoints(tempData.default as any)
                 })
                 .catch(error => console.log(error))
@@ -307,13 +312,16 @@ const App = () => {
                             {points.map((point, index) => (
                                 point.IsActive ?
                                     <DraggableNode key={index} id={point.Id} left={point.Position[0]} top={point.Position[1]}>
-                                        <Point>{point.Id}</Point>
+                                        <Point>
+                                            {/* {point.Id} */}
+                                            <SettingsRemoteIcon fontSize="inherit" />
+                                        </Point>
                                     </DraggableNode>
                                     : null
                             ))}
                         </div>
                         <DragLayer />
-                        <img src="./images/5dd854218135ad200a121f2d232146c8.jpg" alt="" ref={imageRef} />
+                        <img src={imageSrc} alt="" ref={imageRef} />
                     </div>
                 </div>
             </div>

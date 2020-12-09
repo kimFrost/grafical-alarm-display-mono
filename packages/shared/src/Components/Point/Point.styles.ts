@@ -11,12 +11,21 @@ const GroupedStyling = css`
 //const transform = `translate3d(${left * 100}%, ${top * 100}%, 0)`
 
 export const PointRoot = styled.div<IProps>`
-   display: block;
+    display: flex;
     position: relative;
     box-sizing: border-box;
     transform-origin: 50% 50%;
     z-index: 1;
-    &::before {
+    color: #fff;
+
+    width: 50px;
+    height: 50px;
+    //transform: translate(-25px, -25px);
+    background-color: #0CA0CF;
+    border: 2px solid #000;
+    border-radius: 10px;
+
+    /* &::before {
         display: block;
         content: "";
         position: absolute;
@@ -28,7 +37,7 @@ export const PointRoot = styled.div<IProps>`
         background-color: #0CA0CF;
         border: 2px solid #000;
         border-radius: 10px;
-    }   
+    }    */
     
     /* .point--preview {
         user-select: none;

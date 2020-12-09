@@ -26,7 +26,7 @@ const HTML5toTouch = {
 
 const api = new APIKit({
     baseURL: 'https://localhost:8083/api',
-    timeout: 5000,
+    timeout: 10000,
     headers: {
         ctAuthKey: "C551E850-5BD5-4159-8505-85A11C75E4DB"
     }

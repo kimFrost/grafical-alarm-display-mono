@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDragLayer, XYCoord } from 'react-dnd';
+import Node from '../Node';
 import Point from '../Point';
 
 import { Container } from './styles';
@@ -58,8 +59,13 @@ const DragLayer: React.FC<IDragLayerProps> = () => {
     return (
         <div style={dragLayerStyles}>
             <div style={getItemStyles(initialOffset, clientOffset)}>
-                <Point></Point>
+                <Node id="preview" left={0} top={0}>
+                    <Point></Point>
+                </Node>
             </div>
+            {/* <Node id="preview" left={clientOffset?.x || 0} top={clientOffset?.y || 0}>
+                <Point>{JSON.stringify(clientOffset)}</Point>
+            </Node> */}
             {/* <div
                 className={['point', 'point--preview', isDragging ? 'point--dragging' : null].join(' ')}
                 style={getItemStyles(initialOffset, clientOffset)}>

@@ -19,6 +19,12 @@ const DraggableNode: React.FC<IProps> = ({ id, left, top, children }) => {
             left,
             top,
         },
+        begin: (monitor) => {
+            console.log('begin drag')
+        },
+        end: (item, monitor) => {
+            console.log('end drag', item)
+        },
         collect: (monitor) => ({
             isDragging: monitor.isDragging()
         })

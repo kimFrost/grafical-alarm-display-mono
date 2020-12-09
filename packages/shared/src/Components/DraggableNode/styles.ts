@@ -9,6 +9,9 @@ interface IDragProps {
 // States
 export const draggable = css<IDragProps>`
     opacity: ${props => props.isDragging ? 0.3 : 1};
+    /* &:hover {
+        z-index: 2;
+    } */
 `;
 
 // export const StyledNode = styled(NodeRoot)`
