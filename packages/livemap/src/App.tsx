@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { atom, useRecoilState } from 'recoil';
 
 import Select from '@material-ui/core/Select';
@@ -10,6 +10,9 @@ import {
     useAlarmData,
     useAlarmDataSignalr,
     selectedLocationState,
+    selectedAlarmState,
+    ILocation,
+    IAlarm,
 } from '@kimfrost/shared';
 
 import './App.scss';
@@ -21,6 +24,24 @@ const App: React.FC = () => {
     const { alarms, locations } = useAlarmDataSignalr()
 
     const [selectedLocation, setSelectedLocation] = useRecoilState(selectedLocationState);
+    const [selectedAlarm] = useRecoilState(selectedAlarmState);
+
+    useEffect(() => {
+        if (!selectedLocation) {
+            const mostUrgentAlarm = (alarms && alarms.length) ? (alarms as IAlarm[]).reduce((prev, current) => {
+                return (prev.Priority > current.Priority) ? prev : current
+            }) : null;
+
+            let location;
+            if (mostUrgentAlarm) {
+                location = (locations as ILocation[]).find(location => location.id === mostUrgentAlarm.Location);
+            }
+            location = location ? location : locations[0];
+            if (location) {
+                setSelectedLocation(location);
+            }
+        }
+    }, [alarms, locations])
 
     return (
         <div className="app">

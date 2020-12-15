@@ -14,6 +14,7 @@ interface ILoginForm extends FormData {
 
 const LoginFlow: React.FC = ({ children }) => {
 
+    const [error, setError] = useState(null)
     const [pending, setIsPending] = useState(true)
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const { handleSubmit, register } = useForm<ILoginForm>();
@@ -74,7 +75,10 @@ const LoginFlow: React.FC = ({ children }) => {
                 }
 
             ).catch(
-                error => console.log('error', error)
+                error => {
+                    console.log('error', error)
+                    setError(error)
+                }
             )
         }
     });
@@ -105,8 +109,8 @@ const LoginFlow: React.FC = ({ children }) => {
                                 variant="outlined"
                             />
                             <Button color="secondary" fullWidth type="submit" variant="contained">
-                                Log in
-                </Button>
+                                Log in ({JSON.stringify(error)})
+                            </Button>
                         </form>
                     </div>
                 : <div>Pending...</div>

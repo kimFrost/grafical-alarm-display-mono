@@ -7,17 +7,18 @@ import MenuItem from '@material-ui/core/MenuItem';
 import SettingsRemoteIcon from '@material-ui/icons/SettingsRemote';
 
 import {
-    IZone,
     DragLayer,
     DraggableNode,
-    useAPI,
-    ILocation,
-    Point
+    Point,
+    requestsState,
+    ERequestStatus
 } from '@kimfrost/shared';
 
 import './App.scss';
-import * as tempData from './tempdata'
 
+import ImageUploader from './Components/ImageUploader';
+import useData from './hooks/useData';
+import { useRecoilState } from 'recoil';
 
 
 interface INavItemProps {
@@ -57,57 +58,19 @@ const NavItem: React.FC<INavItemProps> = ({ id, type, active, children }) => {
 
 const App = () => {
 
+    const [request] = useRecoilState(requestsState('locationImage'))
     const imageRef = useRef<HTMLImageElement>(null);
-    const [points, setPoints] = useState<IZone[]>([]);
+    const {
+        locations,
+        selectedLocation,
+        setSelectedLocation,
+        points,
+        setPoints,
+        imageSrc,
+        savePoint
+    } = useData()
 
-    const [locations, setLocations] = useState<ILocation[]>([]);
-    const [selectedLocation, setSelectedLocation] = useState<ILocation | null>(null);
-    const [imageSrc, setImageSrc] = useState<string>('');
 
-    const api = useAPI();
-
-    useEffect(() => {
-        if (api) {
-            api.get('/crossorigin/GetAllowedUnits')
-                .then(response => {
-                    console.log(response)
-                    setLocations(response.data)
-                    setSelectedLocation(response.data[0])
-                })
-                .catch(error => console.log(error))
-        }
-    }, [])
-
-    useEffect(() => {
-        if (api && selectedLocation) {
-            api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${selectedLocation.id}`)
-                .then(response => {
-                    console.log('image', response)
-                    setImageSrc(response.data.imageBase64)
-                })
-                .catch(error => console.log(error))
-            api.get(`/crossorigin/GetConfiguration?unitId=${selectedLocation.id}`)
-                .then(response => {
-                    console.log('configuration', response)
-                    // Set test data from temp file. Until server response is fixed
-                    setPoints(tempData.default as any)
-                })
-                .catch(error => console.log(error))
-        }
-    }, [selectedLocation])
-
-    // useEffect(() => {
-    //     const options = {
-    //         method: 'GET',
-    //         headers: { 'Content-Type': 'application/json' },
-    //     }
-    //     fetch('http://localhost:5002/zones', options).then(async (response) => {
-    //         const data = await response.json();
-    //         setPoints(data)
-    //     }).catch((error) => {
-    //         console.error(error)
-    //     })
-    // }, [])
 
     const [{ }, dropTarget] = useDrop({
         accept: ['NAVITEM', 'POINT'],
@@ -128,12 +91,12 @@ const App = () => {
                         if (imageRef && imageRef.current) {
                             point.Position = [x / targetRect.width, y / targetRect.height];
                             point.IsActive = true;
-
                         }
                     }
                     return point
                 }))
-                savePoints()
+                const point = points.find(point => point.Id === item.id);
+                if (point) savePoint(point)
             }
         }
     })
@@ -158,26 +121,10 @@ const App = () => {
                 }
                 return point
             }))
-            savePoints()
+            const point = points.find(point => point.Id === item.id);
+            if (point) savePoint(point)
         }
     })
-
-    const savePoints = () => {
-        const options = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(points)
-        }
-        fetch('http://localhost:5002/zones', options).then(async (response) => {
-            const data = await response.json();
-            if (!response.ok) {
-                const error = (data && data.message) || response.status;
-                return Promise.reject(error);
-            }
-        }).catch((error) => {
-            console.error(error)
-        })
-    }
 
     const getFileFromInput = (file: File): Promise<any> => {
         return new Promise(function (resolve, reject) {
@@ -207,7 +154,9 @@ const App = () => {
                             active={point.IsActive}
                             type="NAVITEM"
                         >
-                            <Point></Point>
+                            <Point>
+                                <SettingsRemoteIcon fontSize="inherit" />
+                            </Point>
                             {point.Id}
                         </NavItem>
                     ))}
@@ -224,105 +173,37 @@ const App = () => {
                         ))}
                     </Select>
 
-                    <input type="file" accept="image/*" onChange={(e) => {
-                        e.persist();
-                        if (e.target && e.target.files) {
-                            Array.from(e.target.files).forEach(file => {
+                    <ImageUploader id={selectedLocation?.id} />
 
-                                const reader = new FileReader();
-                                var url = reader.readAsDataURL(file);
-                                reader.onload = function () {
-                                    console.log(reader.result, url)
-                                    if (api) {
-                                        api.post('/crossorigin/SaveGraphicalDisplayImage', {
-                                            id: (selectedLocation as any).id,
-                                            unitId: (selectedLocation as any).id,
-                                            imageBase64: reader.result
-                                        }, {
-                                            onUploadProgress: e => {
-                                                let progress = Math.round(
-                                                    e.loaded / e.total * 100) + '%';
-                                                console.log('progress', progress)
-                                            }
-                                        })
-                                            .then(response => console.log(response))
-                                            .catch(error => console.log(error))
-                                    }
-                                };
-                                reader.onerror = function (error) {
-                                    console.log('Error: ', error);
-                                };
-
-
-
-                                //const formData = new FormData();
-                                //formData.append('image', file);
-                                // Axios.post('http://localhost:5002/upload', formData, {
-                                //     onUploadProgress: e => {
-                                //         let progress = Math.round(
-                                //             e.loaded / e.total * 100) + '%';
-                                //         console.log('progress', progress)
-                                //     }
-                                // }).then(res => {
-                                //     console.log(res);
-                                //     // getFile({
-                                //     //     name: res.data.name,
-                                //     //     path: 'http://localhost:4500' + res.data.path
-                                //     // })
-                                // }).catch(err => console.log(err))
-
-                                // getFileFromInput(file)
-                                //     .then((binary) => manageUploadedFile(binary, file))
-                                //     .catch((reason) => {
-                                //         console.log(`Error during upload ${reason}`);
-                                //         e.target.value = ''; // to allow upload of same file if error occurs
-                                //     })
-                            });
-                        }
-
-                        // var file = e.target.files[0];
-                        // const reader = new FileReader();
-                        // var url = reader.readAsDataURL(file);
-
-                        // reader.onloadend = function (e) {
-                        //     this.setState({
-                        //         selectedFile: [reader.result]
-                        //     });
-                        // }.bind(this);
-                        // console.log(url); // Would see a path?
-
-                        // this.setState({
-                        //     mainState: "uploaded",
-                        //     selectedFile: e.target.files[0],
-                        //     imageUploaded: 1
-                        // });
-                    }} />
-                    {/* <Select value={selectedLocation} variant="outlined" onChange={(e) => setSelectedLocation(e.target.value as any)}>
-                        {locations.map(location => (
-                            <MenuItem key={location.Id} value={location as any}>{location.Id}</MenuItem>
-                        ))}
-                    </Select> */}
                 </div>
                 <div className="app__map">
-                    <div className="app__image" ref={(ref) => {
-                        dropTarget(ref);
-                    }}>
-                        <div
-                            className="app__points">
-                            {points.map((point, index) => (
-                                point.IsActive ?
-                                    <DraggableNode key={index} id={point.Id} left={point.Position[0]} top={point.Position[1]}>
-                                        <Point>
-                                            {/* {point.Id} */}
-                                            <SettingsRemoteIcon fontSize="inherit" />
-                                        </Point>
-                                    </DraggableNode>
-                                    : null
-                            ))}
+                    {request && request.status === ERequestStatus.PENDING &&
+                        <div>Loading</div>
+                    }
+                     {request && request.status === ERequestStatus.ERROR &&
+                        <div>Could not load image</div>
+                    }
+                    {request && request.status === ERequestStatus.SUCCESS &&
+                        <div className="app__image" ref={(ref) => {
+                            dropTarget(ref);
+                        }}>
+                            <div
+                                className="app__points">
+                                {points.map((point, index) => (
+                                    point.IsActive ?
+                                        <DraggableNode key={index} id={point.Id} left={point.Position[0]} top={point.Position[1]}>
+                                            <Point>
+                                                {/* {point.Id} */}
+                                                <SettingsRemoteIcon fontSize="inherit" />
+                                            </Point>
+                                        </DraggableNode>
+                                        : null
+                                ))}
+                            </div>
+                            <DragLayer />
+                            <img src={imageSrc} alt="" ref={imageRef} />
                         </div>
-                        <DragLayer />
-                        <img src={imageSrc} alt="" ref={imageRef} />
-                    </div>
+                    }
                 </div>
             </div>
         </div>

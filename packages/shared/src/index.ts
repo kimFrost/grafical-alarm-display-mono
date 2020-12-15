@@ -11,6 +11,7 @@ import useAlarmDataSignalr from './Hooks/useAlarmData.signalr';
 import APIKit from './Util/APIKit';
 import APIProvider from './Components/API/APIProvider';
 import useAPI from './Components/API/useAPI';
+import SuspenseImage from './Components/SuspenseImage/index';
 
 //export * as Types from './Types/types';
 //export { EAlarmType, EAlarmTypePriority, IZone, IMessage, ILocation, IAlarm } from './Types/types';
@@ -27,6 +28,7 @@ export {
     useEffectChange,
     useAlarmData,
     useAlarmDataSignalr,
+    SuspenseImage,
     APIKit,
     APIProvider,
     useAPI

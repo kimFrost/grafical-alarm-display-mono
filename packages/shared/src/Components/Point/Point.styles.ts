@@ -12,14 +12,18 @@ const GroupedStyling = css`
 
 export const PointRoot = styled.div<IProps>`
     display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
     box-sizing: border-box;
     transform-origin: 50% 50%;
     z-index: 1;
     color: #fff;
 
-    width: 50px;
-    height: 50px;
+    width: 2em;
+    height: 2em;
+    /* width: 50px;
+    height: 50px; */
     //transform: translate(-25px, -25px);
     background-color: #0CA0CF;
     border: 2px solid #000;
