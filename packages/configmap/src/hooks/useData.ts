@@ -35,7 +35,11 @@ const useData = () => {
             api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${selectedLocation.id}`)
                 .then(response => {
                     console.log('image', response)
-                    setImageSrc(response.data.imageBase64)
+                    setImageSrc(response.data.pathToImage)
+                    //setImageSrc(response.data.imageBase64)
+                    // const width = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
+                    // const height = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
+                    // setImageSrc(`https://via.placeholder.com/${width}x${height}/0`)
                     setRequest({
                         Id: 'locationImage',
                         status: ERequestStatus.SUCCESS

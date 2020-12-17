@@ -59,6 +59,7 @@ const ImageUploader: React.FC<IProps> = ({ id }) => {
                                     let progress = Math.round(
                                         e.loaded / e.total * 100) + '%';
                                     console.log('progress', progress)
+                                    setProgress(e.loaded / e.total * 100);
                                 }
                             }).then(res => {
                                 console.log(res);
