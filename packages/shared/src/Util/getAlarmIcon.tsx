@@ -14,19 +14,19 @@ import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 export const getAlarmIcon = (type: EAlarmType): JSX.Element | null => {
     switch (type) {
-        case EAlarmType.UNKNOWN:
+        case EAlarmType.Unknown:
             return <HelpOutlineIcon fontSize="inherit"/>
-        case EAlarmType.ASSIST:
+        case EAlarmType.AssistanceCall:
             return <NotificationsIcon fontSize="inherit"/>
-        case EAlarmType.CARDIAC_ARREST:
+        case EAlarmType.HeartAttack:
             return <FavoriteIcon fontSize="inherit"/>
-        case EAlarmType.CALL:
+        case EAlarmType.PatientCall:
             return <CallIcon fontSize="inherit"/>
-        case EAlarmType.DEMENTIA:
+        case EAlarmType.Dementia:
             return <ContactSupportIcon fontSize="inherit"/>
-        case EAlarmType.PRESENCE:
+        case EAlarmType.Presence:
             return <LocalHospitalIcon fontSize="inherit"/>
-        case EAlarmType.TECHNICAL:
+        case EAlarmType.TechnicalAlarm:
             return <BuildIcon fontSize="inherit"/>
         default:
             return null;

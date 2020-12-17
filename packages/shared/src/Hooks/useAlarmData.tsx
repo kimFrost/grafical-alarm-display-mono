@@ -71,7 +71,7 @@ const useAlarmData = () => {
 
                     newAlarms.map(alarm => {
                         // Trigger sounds 
-                        if (alarm.Type === EAlarmType.CARDIAC_ARREST) {
+                        if (alarm.Type === EAlarmType.HeartAttack) {
                             const audio = new Audio('./sounds/heart_attack.wav');
                             const promise = audio.play();
                             promise.then(() => console.log('audio played'))

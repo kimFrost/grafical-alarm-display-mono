@@ -25,8 +25,10 @@ const ImageUploader: React.FC<IProps> = ({id}) => {
                             if (api) {
                                 api.post('/crossorigin/SaveGraphicalDisplayImage', {
                                     id: id,
-                                    unitId: id,
-                                    imageBase64: reader.result
+                                    parentId: id,
+                                    imageBase64: reader.result,
+                                    pathToImage: '',
+                                    fileExtension: file.type
                                 }, {
                                     onUploadProgress: e => {
                                         setProgress(e.loaded / e.total * 100);

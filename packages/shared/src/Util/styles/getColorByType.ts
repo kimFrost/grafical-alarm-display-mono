@@ -2,19 +2,19 @@ import { EAlarmType } from "../../Types/types"
 
 export const getColorByType = (type: EAlarmType): string => {
     switch (type) {
-        case EAlarmType.UNKNOWN:
+        case EAlarmType.Unknown:
             return '#000'
-        case EAlarmType.ASSIST:
+        case EAlarmType.AssistanceCall:
             return '#ee2d24'
-        case EAlarmType.CARDIAC_ARREST:
+        case EAlarmType.HeartAttack:
             return '#15709c'
-        case EAlarmType.CALL:
+        case EAlarmType.PatientCall:
             return '#ee2d24'
-        case EAlarmType.DEMENTIA:
+        case EAlarmType.Dementia:
             return '#f7941d'
-        case EAlarmType.PRESENCE:
+        case EAlarmType.Presence:
             return '#299446'
-        case EAlarmType.TECHNICAL:
+        case EAlarmType.TechnicalAlarm:
             return '#92278f'
         default:
             return 'transparent';

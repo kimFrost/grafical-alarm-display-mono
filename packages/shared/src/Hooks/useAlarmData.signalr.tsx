@@ -47,7 +47,7 @@ const useAlarmDataSignalr = () => {
                             Position: config ? [config.xValue, config.yValue] : [0, 0],
                             UnitText: '',
                             EquipmentPhysicalId: '',
-                            Type: EAlarmType.UNKNOWN,
+                            Type: EAlarmType.Unknown,
                             Priority: 0,
                             Acknowledged: false
                         }

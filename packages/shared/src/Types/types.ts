@@ -17,14 +17,35 @@ export interface IZone {
     IsActive: boolean
 }
 
+// export enum EAlarmType {
+//     UNKNOWN = 'Ukendt',
+//     CARDIAC_ARREST = 'Hj.Stop',
+//     DEMENTIA = 'Demens',
+//     ASSIST = 'Assistance',
+//     CALL = 'Kald',
+//     PRESENCE = 'Nærvær',
+//     TECHNICAL = 'Teknisk',
+// }
+
 export enum EAlarmType {
-    UNKNOWN = 'Ukendt',
-    CARDIAC_ARREST = 'Hj.Stop',
-    DEMENTIA = 'Demens',
-    ASSIST = 'Assistance',
-    CALL = 'Kald',
-    PRESENCE = 'Nærvær',
-    TECHNICAL = 'Teknisk',
+    Unknown = 0,
+    RemoteAcknowledge = 10,
+    TechnicalAlarm = 11,
+    BatteryAlarm = 12,
+    Presence = 20,
+    PatientCall = 30,
+    AssistanceCall = 40,
+    Dementia = 42,
+    Emergency = 47,
+    AssaultAlarm = 50,
+    FireAlarm = 51,
+    HeartAttack = 52,
+    MaxUrgentAlarm = 59,
+    AcknowledgeDeviceAlarms = 90,
+    AcknowledgeCustomerAlarms = 91,
+    AcknowledgeUnitAlarms = 92,
+    AcknowledgeCustomerAlarmsAndSetPresence = 93,
+    AcceptedAlarm = 99
 }
 
 export enum EAlarmTypePriority {

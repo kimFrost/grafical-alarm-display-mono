@@ -4,6 +4,8 @@
         "lib": [
             "es6",
             "dom",
+            "dom.Iterable",
+            //"ScriptHost"
             "es2016",
             "es2017"
         ],
