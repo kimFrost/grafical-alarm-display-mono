@@ -6,7 +6,7 @@ interface IProps {
     id?: string
 }
 
-const ImageUploader: React.FC<IProps> = ({id}) => {
+const ImageUploader: React.FC<IProps> = ({ id }) => {
 
     const [progress, setProgress] = useState<number>(0)
     const api = useAPI()
@@ -18,57 +18,63 @@ const ImageUploader: React.FC<IProps> = ({id}) => {
                 if (e.target && e.target.files) {
                     Array.from(e.target.files).forEach(file => {
 
-                        const reader = new FileReader();
-                        var url = reader.readAsDataURL(file);
-                        reader.onload = function () {
-                            console.log(reader.result, url)
-                            if (api) {
-                                api.post('/crossorigin/SaveGraphicalDisplayImage', {
-                                    id: id,
-                                    parentId: id,
-                                    imageBase64: reader.result,
-                                    pathToImage: '',
-                                    fileExtension: file.type
-                                }, {
-                                    onUploadProgress: e => {
-                                        setProgress(e.loaded / e.total * 100);
-                                        let progress = Math.round(
-                                            e.loaded / e.total * 100) + '%';
-                                        console.log('progress', progress)
-                                    }
-                                })
-                                    .then(response => console.log(response))
-                                    .catch(error => console.log(error))
-                            }
-                        };
-                        reader.onerror = function (error) {
-                            console.log('Error: ', error);
-                        };
-
-
-
-                        //const formData = new FormData();
-                        //formData.append('image', file);
-                        // Axios.post('http://localhost:5002/upload', formData, {
-                        //     onUploadProgress: e => {
-                        //         let progress = Math.round(
-                        //             e.loaded / e.total * 100) + '%';
-                        //         console.log('progress', progress)
+                        // const reader = new FileReader();
+                        // var url = reader.readAsDataURL(file);
+                        // reader.onload = function () {
+                        //     console.log(reader.result, url)
+                        //     if (api) {
+                        //         api.post('/crossorigin/SaveGraphicalDisplayImage', {
+                        //             id: id,
+                        //             parentId: id,
+                        //             imageBase64: reader.result,
+                        //             pathToImage: '',
+                        //             fileExtension: file.type
+                        //         }, {
+                        //             onUploadProgress: e => {
+                        //                 setProgress(e.loaded / e.total * 100);
+                        //                 let progress = Math.round(
+                        //                     e.loaded / e.total * 100) + '%';
+                        //                 console.log('progress', progress)
+                        //             }
+                        //         })
+                        //             .then(response => console.log(response))
+                        //             .catch(error => console.log(error))
                         //     }
-                        // }).then(res => {
-                        //     console.log(res);
-                        //     // getFile({
-                        //     //     name: res.data.name,
-                        //     //     path: 'http://localhost:4500' + res.data.path
-                        //     // })
-                        // }).catch(err => console.log(err))
+                        // };
+                        // reader.onerror = function (error) {
+                        //     console.log('Error: ', error);
+                        // };
 
-                        // getFileFromInput(file)
-                        //     .then((binary) => manageUploadedFile(binary, file))
-                        //     .catch((reason) => {
-                        //         console.log(`Error during upload ${reason}`);
-                        //         e.target.value = ''; // to allow upload of same file if error occurs
-                        //     })
+                        if (id && api) {
+                            const formData = new FormData();
+
+                            const ext = file.name.split('.').pop() || '';
+
+                            formData.append('parentId', id);
+                            formData.append('fileExtension', ext);
+                            formData.append('image', file);
+
+                            api.post('/crossorigin/SaveGraphicalDisplayImage', formData, {
+                                onUploadProgress: e => {
+                                    let progress = Math.round(
+                                        e.loaded / e.total * 100) + '%';
+                                    console.log('progress', progress)
+                                }
+                            }).then(res => {
+                                console.log(res);
+                                // getFile({
+                                //     name: res.data.name,
+                                //     path: 'http://localhost:4500' + res.data.path
+                                // })
+                            }).catch(err => console.log(err))
+
+                            // getFileFromInput(file)
+                            //     .then((binary) => manageUploadedFile(binary, file))
+                            //     .catch((reason) => {
+                            //         console.log(`Error during upload ${reason}`);
+                            //         e.target.value = ''; // to allow upload of same file if error occurs
+                            //     })
+                        }
                     });
                 }
 
