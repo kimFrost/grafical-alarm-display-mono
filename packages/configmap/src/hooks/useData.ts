@@ -1,15 +1,16 @@
 import { useRef, useEffect, useState } from 'react';
-import { useAPI, IZone, ILocation, requestsState, ERequestStatus } from '@kimfrost/shared';
+import { useAPI, IConfigPoint, ILocation, requestsState, ERequestStatus, Guid, IDisplayImage } from '@kimfrost/shared';
 import { useRecoilState } from 'recoil';
 
-import * as tempData from '../tempdata'
+//import * as tempData from '../tempdata'
 
 const useData = () => {
 
-    const [points, setPoints] = useState<IZone[]>([]);
+    const [points, setPoints] = useState<IConfigPoint[]>([]);
     const [locations, setLocations] = useState<ILocation[]>([]);
     const [selectedLocation, setSelectedLocation] = useState<ILocation | null>(null);
-    const [imageSrc, setImageSrc] = useState<string>('');
+    const [image, setImage] = useState<IDisplayImage|null>(null);
+    //const [imageSrc, setImageSrc] = useState<string>('');
 
     const api = useAPI();
     const [request, setRequest] = useRecoilState(requestsState('locationImage'))
@@ -34,8 +35,10 @@ const useData = () => {
             })
             api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${selectedLocation.id}`)
                 .then(response => {
-                    console.log('image', response)
-                    setImageSrc(response.data.pathToImage)
+                    const data = response.data as IDisplayImage
+                    console.log('image', data)
+                    window.URL.revokeObjectURL(data.pathToImage) // clear image cache
+                    setImage(data)
                     //setImageSrc(response.data.imageBase64)
                     // const width = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
                     // const height = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
@@ -54,22 +57,24 @@ const useData = () => {
                 })
             api.get(`crossorigin/GetCustomerEquipment?unitId=${selectedLocation.id}`)
                 .then(response => {
-                    const newPoints: IZone[] = response.data.map((item: any) => {
+                    const newPoints: IConfigPoint[] = response.data.map((item: any) => {
                         return {
                             Id: item.customerId,
                             ZoneText: item.customerName,
                             Location: '',
                             Position: [0, 0],
-                            IsActive: false
+                            IsActive: false,
+                            Guid: Guid.newGuid()
                         }
                     });
                     api.get(`/crossorigin/GetConfiguration?unitId=${selectedLocation.id}`)
                         .then(response => {
                             setPoints(newPoints.map(point => {
                                 response.data.map((config: any) => {
-                                    if (point.Id === config.id) {
+                                    if (point.Id === config.customerId) {
                                         point.Position = [config.xValue, config.yValue];
                                         point.IsActive = true;
+                                        point.Guid = config.id;
                                     }
                                 })
                                 return point;
@@ -98,12 +103,13 @@ const useData = () => {
     //     })
     // }
 
-    const savePoint = (point: IZone) => {
-        if (api) {
+    const savePoint = (point: IConfigPoint) => {
+        if (api && image) {
             api.post('/crossorigin/SaveConfiguration', [
                 {
-                    id: point.Id,
-                    unitId: selectedLocation?.id,
+                    id: point.Guid,
+                    parentId: selectedLocation?.id,
+                    graphicalDisplayImageId: image?.id,
                     customerId: point.Id,
                     zoneNumber: 0,
                     xValue: point.Position[0],
@@ -121,7 +127,8 @@ const useData = () => {
         locations: locations,
         selectedLocation: selectedLocation,
         setSelectedLocation: setSelectedLocation,
-        imageSrc: imageSrc,
+        image: image,
+        setImage: setImage,
         savePoint: savePoint
     };
 }

@@ -216,7 +216,7 @@ const AlarmListItem: React.FC<IProps> = ({ alarm, state }) => {
                         <div>{request?.status}</div>
                         <div>{alarm.Id}</div>
                         <div>{alarm.Location}</div>
-                        <div>{alarm.Type}</div>
+                        <div>{alarm.ZoneText}</div>
                     </div>
                     {request && request.status === ERequestStatus.PENDING &&
                         <Spinner />

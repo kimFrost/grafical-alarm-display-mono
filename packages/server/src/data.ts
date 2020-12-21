@@ -1,10 +1,10 @@
-import { IAlarm, IConfiguration, ILocation, IZone, EAlarmType } from '@kimfrost/shared';
+import { IAlarm, IConfiguration, ILocation, IConfigPoint, EAlarmType } from '@kimfrost/shared';
 
 const zones = require("./public/zones.json");
 
 interface IData {
     alarms: IAlarm[],
-    zones: IZone[],
+    zones: IConfigPoint[],
     locations: ILocation[]
 }
 

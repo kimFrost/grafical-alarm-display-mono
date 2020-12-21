@@ -66,7 +66,8 @@ const App = () => {
         setSelectedLocation,
         points,
         setPoints,
-        imageSrc,
+        image,
+        setImage,
         savePoint
     } = useData()
 
@@ -173,7 +174,9 @@ const App = () => {
                         ))}
                     </Select>
 
-                    <ImageUploader id={selectedLocation?.id} />
+                    <ImageUploader id={selectedLocation?.id} onUploaded={(data) => {
+                        setImage(data)
+                    }} />
 
                 </div>
                 <div className="app__map">
@@ -201,7 +204,8 @@ const App = () => {
                                 ))}
                             </div>
                             <DragLayer />
-                            <img src={imageSrc} alt="" ref={imageRef} />
+                            {console.log('render image')}
+                            <img src={image?.pathToImage} alt="" ref={imageRef} />
                         </div>
                     }
                 </div>

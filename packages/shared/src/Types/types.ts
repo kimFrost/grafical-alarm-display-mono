@@ -6,11 +6,23 @@ export interface IMessage {
 
 export interface ILocation {
     id: string
-    ImageUrl: string
+    ImageUrl?: string
 }
 
-export interface IZone {
-    Id: string;
+export interface IDisplayImage {
+    fileExtension: string
+    id: string
+    parentId: string
+    pathToImage: string
+}
+
+export interface IDisplayImageUpload extends IDisplayImage {
+    imageBase64: string
+}
+
+export interface IConfigPoint {
+    Id: string
+    Guid?: string
     ZoneText: string
     Location: string
     Position: [number, number]
@@ -85,4 +97,14 @@ export interface IRequest {
 export interface IConfiguration {
     icons: Map<string, string>
     sounds: Map<string, string>
+}
+
+export class Guid {
+    static newGuid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0,
+                v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
 }

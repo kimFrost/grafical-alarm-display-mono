@@ -6,7 +6,7 @@ import * as multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 
-import { IAlarm, ILocation, IMessage, IZone, EAlarmType, EAlarmTypePriority } from '@kimfrost/shared';
+import { IAlarm, ILocation, IMessage, IConfigPoint, EAlarmType, EAlarmTypePriority } from '@kimfrost/shared';
 import data from './data';
 
 const fs = require('fs');
@@ -116,7 +116,7 @@ class Server {
     private connections: WebSocket[];
 
     private alarms: IAlarm[];
-    private zones: IZone[];
+    private zones: IConfigPoint[];
     private locations: ILocation[];
 
     constructor() {

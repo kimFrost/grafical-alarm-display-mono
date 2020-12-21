@@ -14,8 +14,9 @@ import useAPI from './Components/API/useAPI';
 import SuspenseImage from './Components/SuspenseImage/index';
 
 //export * as Types from './Types/types';
-//export { EAlarmType, EAlarmTypePriority, IZone, IMessage, ILocation, IAlarm } from './Types/types';
+//export { EAlarmType, EAlarmTypePriority, IConfigPoint, IMessage, ILocation, IAlarm } from './Types/types';
 export * from './Types/types';
+export { Guid } from './Types/types';
 export * from './State/atoms';
 export {
     Point,
@@ -31,5 +32,5 @@ export {
     SuspenseImage,
     APIKit,
     APIProvider,
-    useAPI
+    useAPI,
 }

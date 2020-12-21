@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Connection, hubConnection } from 'signalr-no-jquery';
 import useAPI from '../Components/API/useAPI';
 import { IAlarm, ILocation, EAlarmType } from '../Types/types';
+import { IDisplayImage, Guid } from './../Types/types';
 
 
 const useAlarmDataSignalr = () => {
@@ -16,6 +17,20 @@ const useAlarmDataSignalr = () => {
             api.get('/crossorigin/GetAllowedUnits')
                 .then(response => {
                     console.log(response)
+                    //const data = response.data;
+
+                    // const getImage = async (location) => {
+
+                    // }
+
+                    // const getImages = async (data) => {
+                    //     return Promise.all(data.map(location => ))
+                    // }
+
+                    // getImages(data).then(images => {
+                    //     //setLocations()
+                    // })
+
                     // Temp for testing
                     const data = response.data.map(location => {
                         const width = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
@@ -47,10 +62,12 @@ const useAlarmDataSignalr = () => {
                             Position: config ? [config.xValue, config.yValue] : [0, 0],
                             UnitText: '',
                             EquipmentPhysicalId: '',
-                            Type: EAlarmType.Unknown,
+                            Type: entry.alarmType.type,
                             Priority: 0,
                             Acknowledged: false
                         }
+                        //entry.alarmType.sortOrder
+                        //entry.alarmType.text
                         return alarm;
                     })
                     setAlarms(alarms)
@@ -59,10 +76,43 @@ const useAlarmDataSignalr = () => {
         }
     }
 
+    const fetchLocationImage = (locationId) => {
+        if (api) {
+            api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${locationId}`)
+                .then(response => {
+                    const data = response.data as IDisplayImage
+                    console.log('image', data)
+                    setLocations(locations.map(location => {
+                        if (location.id === locationId) {
+                            return {
+                                id: location.id,
+                                ImageUrl: ''
+                            }
+                        }
+                        else {
+                            return location
+                        }
+                    }));
+
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+    }
+
     useEffect(() => {
         fetchLocations();
         fetchAlarms();
     }, [])
+
+    // useEffect(() => {
+    //     if (locations.length) {
+    //         locations.forEach(location => {
+    //             fetchLocationImage(location.id)
+    //         });
+    //     }
+    // }, [locations])
 
     useEffect(() => {
         if (!connection) {
