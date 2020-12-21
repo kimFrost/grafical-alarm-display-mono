@@ -19,11 +19,11 @@ const useAlarmDataSignalr = () => {
                     const data = response.data;
                     const getImage = async (location) => {
                         return new Promise<IDisplayImage | null>(resolve => {
-                            api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${location.id}`)
+                            api.get(`/crossorigin/GetGraphicalDisplayImage?parentId=${location.id}`)
                                 .then(response => resolve(response.data))
                                 .catch(error => resolve(null))
                         });
-                        // return api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${location.id}`)
+                        // return api.get(`/crossorigin/GetGraphicalDisplayImage?parentId=${location.id}`)
                     }
                     const getImages = async (data): Promise<any> => {
                         //return Promise.allSettled(data.map(location => getImage(location)))
@@ -84,37 +84,38 @@ const useAlarmDataSignalr = () => {
                         //entry.alarmType.text
                         return alarm;
                     })
+                    console.log('alarms', alarms)
                     setAlarms(alarms)
                 })
                 .catch(error => console.log(error))
         }
     }
 
-    const fetchLocationImage = (locationId) => {
-        if (api) {
-            api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${locationId}`)
-                .then(response => {
+    // const fetchLocationImage = (locationId) => {
+    //     if (api) {
+    //         api.get(`/crossorigin/GetGraphicalDisplayImage?parentId=${locationId}`)
+    //             .then(response => {
 
-                    const data = response.data as IDisplayImage
-                    console.log('image', data)
-                    // setLocations(locations.map(location => {
-                    //     if (location.id === locationId) {
-                    //         return {
-                    //             id: location.id,
-                    //             ImageUrl: ''
-                    //         }
-                    //     }
-                    //     else {
-                    //         return location
-                    //     }
-                    // }));
+    //                 const data = response.data as IDisplayImage
+    //                 console.log('image', data)
+    //                 // setLocations(locations.map(location => {
+    //                 //     if (location.id === locationId) {
+    //                 //         return {
+    //                 //             id: location.id,
+    //                 //             ImageUrl: ''
+    //                 //         }
+    //                 //     }
+    //                 //     else {
+    //                 //         return location
+    //                 //     }
+    //                 // }));
 
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        }
-    }
+    //             })
+    //             .catch(error => {
+    //                 console.log(error)
+    //             })
+    //     }
+    // }
 
     useEffect(() => {
         fetchLocations();

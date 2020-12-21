@@ -7,8 +7,7 @@
             "dom.Iterable",
             //"ScriptHost"
             "es2016",
-            "es2017",
-            "es2020"
+            "es2017"
         ],
         "module": "esnext",
         "moduleResolution": "node",

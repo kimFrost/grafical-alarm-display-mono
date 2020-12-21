@@ -15,10 +15,10 @@ interface IProps {
 
 const Livemap: React.FC<IProps> = ({ alarms }) => {
 
-    const imageRef = useRef<HTMLImageElement>(null);
+    //const imageRef = useRef<HTMLImageElement>(null);
     const [selectedAlarm, setSelectedAlarm] = useRecoilState(selectedAlarmState);
     const [selectedLocation, setSelectedLocation] = useRecoilState(selectedLocationState);
-    const [loading, setLoading] = useState(false);
+    //const [loading, setLoading] = useState(false);
 
     return (
         <div className="app__map" onClick={() => setSelectedAlarm(null)}>
@@ -27,13 +27,10 @@ const Livemap: React.FC<IProps> = ({ alarms }) => {
                     <div>Loading</div>
                 }>
                     <div className="app__points">
-                        {!loading &&
-                            alarms.map((alarm, index) => (
+                        {
+                            alarms.map((alarm) => (
                                 alarm.Location === selectedLocation?.id ?
-                                    // <Node key={alarm.Id} id={alarm.Id} left={alarm.Position[0]} top={alarm.Position[1]}>
-                                    //     <Alarm alarm={alarm} />
-                                    // </Node>
-                                    <Node key={alarm.Id} id={alarm.Id} left={0} top={0}>
+                                    <Node key={alarm.Id} id={alarm.Id} left={alarm.Position[0]} top={alarm.Position[1]}>
                                         <Alarm alarm={alarm} />
                                     </Node>
                                     : null
@@ -42,10 +39,6 @@ const Livemap: React.FC<IProps> = ({ alarms }) => {
                     </div>
                     <SuspenseImage src={selectedLocation?.ImageUrl} />
                 </React.Suspense>
-                {/* <img src={selectedLocation?.ImageUrl} onLoad={() => {
-                    console.log('image loaded')
-                    setLoading(false);
-                }} ref={imageRef} /> */}
             </div>
         </div>
     );

@@ -9,7 +9,7 @@ const useData = () => {
     const [points, setPoints] = useState<IConfigPoint[]>([]);
     const [locations, setLocations] = useState<ILocation[]>([]);
     const [selectedLocation, setSelectedLocation] = useState<ILocation | null>(null);
-    const [image, setImage] = useState<IDisplayImage|null>(null);
+    const [image, setImage] = useState<IDisplayImage | null>(null);
     //const [imageSrc, setImageSrc] = useState<string>('');
 
     const api = useAPI();
@@ -33,7 +33,7 @@ const useData = () => {
                 Id: 'locationImage',
                 status: ERequestStatus.PENDING
             })
-            api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${selectedLocation.id}`)
+            api.get(`/crossorigin/GetGraphicalDisplayImage?parentId=${selectedLocation.id}`)
                 .then(response => {
                     const data = response.data as IDisplayImage
                     console.log('image', data)
@@ -55,19 +55,20 @@ const useData = () => {
                         status: ERequestStatus.ERROR
                     })
                 })
-            api.get(`crossorigin/GetCustomerEquipment?unitId=${selectedLocation.id}`)
+            api.get(`crossorigin/GetCustomerEquipments?parentId=${selectedLocation.id}`)
                 .then(response => {
                     const newPoints: IConfigPoint[] = response.data.map((item: any) => {
                         return {
                             Id: item.customerId,
                             ZoneText: item.customerName,
                             Location: '',
-                            Position: [0, 0],
+                            Position: [-1, -1],
                             IsActive: false,
-                            Guid: Guid.newGuid()
+                            //Guid: Guid.newGuid()
+                            Guid: null
                         }
                     });
-                    api.get(`/crossorigin/GetConfiguration?unitId=${selectedLocation.id}`)
+                    api.get(`/crossorigin/getConfigurations?parentId=${selectedLocation.id}`)
                         .then(response => {
                             setPoints(newPoints.map(point => {
                                 response.data.map((config: any) => {
@@ -87,7 +88,7 @@ const useData = () => {
     }, [selectedLocation])
 
     // const savePoints = () => {
-    //     const options = {
+    //     const options = {savePoints
     //         method: 'POST',
     //         headers: { 'Content-Type': 'application/json' },
     //         body: JSON.stringify(points)
@@ -103,19 +104,19 @@ const useData = () => {
     //     })
     // }
 
-    const savePoint = (point: IConfigPoint) => {
+    const savePoints = () => {
         if (api && image) {
-            api.post('/crossorigin/SaveConfiguration', [
-                {
+            api.post('/crossorigin/SaveConfigurations', points.map(point => {
+                return {
                     id: point.Guid,
                     parentId: selectedLocation?.id,
                     graphicalDisplayImageId: image?.id,
                     customerId: point.Id,
-                    zoneNumber: 530,
+                    zoneNumber: null,
                     xValue: point.Position[0],
                     yValue: point.Position[1],
                 }
-            ])
+            }))
                 .then(response => console.log(response))
                 .catch(error => console.log(error))
         }
@@ -129,7 +130,7 @@ const useData = () => {
         setSelectedLocation: setSelectedLocation,
         image: image,
         setImage: setImage,
-        savePoint: savePoint
+        savePoints: savePoints
     };
 }
 export default useData
