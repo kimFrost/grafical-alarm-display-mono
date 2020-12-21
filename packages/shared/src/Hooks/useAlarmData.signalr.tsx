@@ -16,31 +16,45 @@ const useAlarmDataSignalr = () => {
         if (api) {
             api.get('/crossorigin/GetAllowedUnits')
                 .then(response => {
-                    console.log(response)
-                    //const data = response.data;
-
-                    // const getImage = async (location) => {
-
-                    // }
-
-                    // const getImages = async (data) => {
-                    //     return Promise.all(data.map(location => ))
-                    // }
-
-                    // getImages(data).then(images => {
-                    //     //setLocations()
-                    // })
+                    const data = response.data;
+                    const getImage = async (location) => {
+                        return new Promise<IDisplayImage | null>(resolve => {
+                            api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${location.id}`)
+                                .then(response => resolve(response.data))
+                                .catch(error => resolve(null))
+                        });
+                        // return api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${location.id}`)
+                    }
+                    const getImages = async (data): Promise<any> => {
+                        //return Promise.allSettled(data.map(location => getImage(location)))
+                        return Promise.all(data.map(location => getImage(location)))
+                    }
+                    getImages(data)
+                        .then(images => {
+                            setLocations(data.map(location => {
+                                let imageUrl = '';
+                                images.forEach(image => {
+                                    if (image && image.parentId === location.id)
+                                        imageUrl = image.pathToImage;
+                                });
+                                return {
+                                    id: location.id,
+                                    ImageUrl: imageUrl
+                                }
+                            }))
+                        })
+                        .catch(error => console.log('error', error))
 
                     // Temp for testing
-                    const data = response.data.map(location => {
-                        const width = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
-                        const height = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
-                        return {
-                            id: location.id,
-                            ImageUrl: `https://via.placeholder.com/${width}x${height}/0`
-                        }
-                    })
-                    setLocations(data)
+                    // const data = response.data.map(location => {
+                    //     const width = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
+                    //     const height = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
+                    //     return {
+                    //         id: location.id,
+                    //         ImageUrl: `https://via.placeholder.com/${width}x${height}/0`
+                    //     }
+                    // })
+                    // setLocations(data)
 
                 })
                 .catch(error => console.log(error))
@@ -80,19 +94,20 @@ const useAlarmDataSignalr = () => {
         if (api) {
             api.get(`/crossorigin/GetGraphicalDisplayImage?unitId=${locationId}`)
                 .then(response => {
+
                     const data = response.data as IDisplayImage
                     console.log('image', data)
-                    setLocations(locations.map(location => {
-                        if (location.id === locationId) {
-                            return {
-                                id: location.id,
-                                ImageUrl: ''
-                            }
-                        }
-                        else {
-                            return location
-                        }
-                    }));
+                    // setLocations(locations.map(location => {
+                    //     if (location.id === locationId) {
+                    //         return {
+                    //             id: location.id,
+                    //             ImageUrl: ''
+                    //         }
+                    //     }
+                    //     else {
+                    //         return location
+                    //     }
+                    // }));
 
                 })
                 .catch(error => {

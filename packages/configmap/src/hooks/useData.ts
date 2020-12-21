@@ -73,7 +73,7 @@ const useData = () => {
                                 response.data.map((config: any) => {
                                     if (point.Id === config.customerId) {
                                         point.Position = [config.xValue, config.yValue];
-                                        point.IsActive = true;
+                                        point.IsActive = (config.xValue >= 0 && config.yValue >= 0);
                                         point.Guid = config.id;
                                     }
                                 })
@@ -111,7 +111,7 @@ const useData = () => {
                     parentId: selectedLocation?.id,
                     graphicalDisplayImageId: image?.id,
                     customerId: point.Id,
-                    zoneNumber: 0,
+                    zoneNumber: 530,
                     xValue: point.Position[0],
                     yValue: point.Position[1],
                 }

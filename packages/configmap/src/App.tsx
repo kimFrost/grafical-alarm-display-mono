@@ -116,14 +116,18 @@ const App = () => {
         },
         drop: (item: any, monitor) => {
             //const result = monitor.getDropResult() // should drop handler return result?
-            setPoints(points.map(point => {
-                if (point.Id === item.id) {
-                    point.IsActive = false;
-                }
-                return point
-            }))
+            // setPoints(points.map(point => {
+            //     if (point.Id === item.id) {
+            //         point.IsActive = false;
+            //     }
+            //     return point
+            // }))
             const point = points.find(point => point.Id === item.id);
-            if (point) savePoint(point)
+            if (point) {
+                point.IsActive = false;
+                point.Position = [-1, -1];
+                savePoint(point)
+            }
         }
     })
 
